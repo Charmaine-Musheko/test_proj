@@ -1,0 +1,2 @@
+This folder is used to store all files related to users data
+All user classes

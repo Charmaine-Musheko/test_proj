@@ -1,0 +1,2 @@
+This folder contains diagrams related to the how the database is built
+ERD, Logical Design and Physical Design

@@ -1,0 +1,1 @@
+This folder is used to store all diagrams related to the LMS system be it classe diagram or ER Diagram

@@ -1,0 +1,1 @@
+This folder is used to store all images and fonts used in the application

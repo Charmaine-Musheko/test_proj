@@ -1,0 +1,2 @@
+This folder is used for all files related to how the database is formed
+All SQL files on how the database is created is stored here

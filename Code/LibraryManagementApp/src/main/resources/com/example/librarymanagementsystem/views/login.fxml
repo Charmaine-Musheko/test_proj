@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.scene.text.Font?>
+<AnchorPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.example.librarymanagementsystem.controllers.LoginController"
+            prefHeight="400.0" prefWidth="600.0">
+    <children>
+        <Label layoutX="300.0" layoutY="37.0" text="Login">
+            <font>
+                <Font name="Lucida Sans Typewriter Regular" size="36.0" />
+            </font>
+        </Label>
+        <Label layoutX="300.0" layoutY="131.0" text="Username" />
+        <Label layoutX="300.0" layoutY="207.0" text="Password" />
+        <TextField fx:id="txtFieldUsername" layoutX="300.0" layoutY="160.0" prefHeight="25.0" prefWidth="217.0">
+            <font>
+                <Font size="14.0" />
+            </font>
+        </TextField>
+        <PasswordField fx:id="txtFieldPassword" layoutX="300.0" layoutY="238.0" prefHeight="25.0" prefWidth="217.0">
+            <font>
+                <Font size="14.0" />
+            </font>
+        </PasswordField>
+        <Button fx:id="btnLogin" layoutX="300.0" layoutY="324.0" mnemonicParsing="false" onAction="#login" prefHeight="44.0" prefWidth="109.0" text="Login">
+            <font>
+                <Font name="System Bold" size="16.0" />
+            </font>
+        </Button>
+        <Label layoutX="432.0" layoutY="338.0" text="or" />
+        <CheckBox fx:id="checkBoxShowPass" layoutX="415.0" layoutY="293.0" mnemonicParsing="false" text="Show Password" />
+        <Button fx:id="btnSignUp" layoutX="475.0" layoutY="333.0" mnemonicParsing="false" onAction="#goToSignUp" text="Sign Up">
+            <font>
+                <Font size="14.0" />
+            </font>
+        </Button>
+    </children>
+
+</AnchorPane>

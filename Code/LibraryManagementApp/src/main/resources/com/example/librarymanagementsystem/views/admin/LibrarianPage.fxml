@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
+
+<AnchorPane fx:id="LibrarianPage" prefHeight="800.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.librarymanagementsystem.controllers.admin.LibrarianPageController">
+   <children>
+      <VBox prefHeight="800.0" prefWidth="247.0" style="-fx-background-color: #C8BFC7;">
+         <children>
+            <Button fx:id="AccountBtn" mnemonicParsing="false" onAction="#AccountPage" prefHeight="60.0" prefWidth="247.0" style="-fx-background-color: #3C3C3B;" text="Account" textFill="WHITE">
+               <VBox.margin>
+                  <Insets top="100.0" />
+               </VBox.margin>
+            </Button>
+            <Button fx:id="LecturerBtn" mnemonicParsing="false" onAction="#LecturerPage" prefHeight="60.0" prefWidth="247.0" style="-fx-background-color: #3C3C3B;" text="Lecturer" textFill="WHITE">
+               <VBox.margin>
+                  <Insets top="30.0" />
+               </VBox.margin>
+            </Button>
+            <Button fx:id="LibrarianBtn" mnemonicParsing="false" onAction="#LibrarianPage" prefHeight="60.0" prefWidth="247.0" style="-fx-background-color: #3C3C3B;" text="Librarian" textFill="WHITE">
+               <VBox.margin>
+                  <Insets top="30.0" />
+               </VBox.margin>
+            </Button>
+            <Button fx:id="MemberBtn" mnemonicParsing="false" onAction="#MemberPage" prefHeight="60.0" prefWidth="247.0" style="-fx-background-color: #3C3C3B;" text="Member" textFill="WHITE">
+               <VBox.margin>
+                  <Insets top="30.0" />
+               </VBox.margin>
+            </Button>
+            <Button fx:id="StudentBtn" mnemonicParsing="false" onAction="#StudentPage" prefHeight="60.0" prefWidth="247.0" style="-fx-background-color: #3C3C3B;" text="Student" textFill="WHITE">
+               <VBox.margin>
+                  <Insets top="30.0" />
+               </VBox.margin>
+            </Button>
+            <Button fx:id="LogoutBtn" mnemonicParsing="false" prefHeight="60.0" prefWidth="247.0" style="-fx-background-color: #6D4C3D;" text="Logout" textFill="WHITE">
+               <VBox.margin>
+                  <Insets top="150.0" />
+               </VBox.margin>
+            </Button>
+         </children>
+      </VBox>
+      <Pane layoutX="253.0" prefHeight="800.0" prefWidth="953.0" style="-fx-background-color: #ffffff;">
+         <children>
+            <Label layoutX="11.0" layoutY="78.0" text="Librarian ID" />
+            <Label layoutX="13.0" layoutY="531.0" text="Password" />
+            <Label layoutX="16.0" layoutY="451.0" text="Cellphone Number" />
+            <Label layoutX="13.0" layoutY="371.0" text="Email" />
+            <Label layoutX="13.0" layoutY="294.0" text="Last Name" />
+            <Label layoutX="16.0" layoutY="221.0" text="Middle Name" />
+            <Label layoutX="12.0" layoutY="148.0" text="First Name" />
+            <TextField fx:id="txt_Password" layoutX="14.0" layoutY="548.0" promptText="Enter Password" />
+            <TextField fx:id="txt_CellphoneNumber" layoutX="14.0" layoutY="468.0" promptText="Enter Cellphone Number" />
+            <TextField fx:id="txt_Email" layoutX="14.0" layoutY="388.0" promptText="Enter Email" />
+            <TextField fx:id="txt_LastName" layoutX="14.0" layoutY="311.0" promptText="Enter Last Name" />
+            <TextField fx:id="txt_MiddleName" layoutX="14.0" layoutY="238.0" promptText="Enter Middle Name" />
+            <TextField fx:id="txt_FirstName" layoutX="14.0" layoutY="165.0" promptText="Enter First Name" />
+            <TextField fx:id="txt_id" layoutX="13.0" layoutY="95.0" promptText="Enter User ID" />
+            <TableView fx:id="LibrarianTable" layoutX="172.0" layoutY="78.0" prefHeight="524.0" prefWidth="765.0">
+              <columns>
+                <TableColumn fx:id="Lib_ID" prefWidth="86.0" text="Librarian_ID" />
+                <TableColumn fx:id="Lib_FN" prefWidth="78.0" text="First_Name" />
+                  <TableColumn fx:id="Lib_MN" prefWidth="102.0" text="Middle_Name" />
+                  <TableColumn fx:id="Lib_LN" prefWidth="134.0" text="Last_Name" />
+                  <TableColumn fx:id="Lib_E" prefWidth="85.0" text="Email" />
+                  <TableColumn fx:id="Lib_CN" prefWidth="140.0" text="CellPhone" />
+                  <TableColumn fx:id="Lib_P" prefWidth="138.0" text="Password" />
+              </columns>
+            </TableView>
+            <Button fx:id="DeleteBtn" layoutX="754.0" layoutY="624.0" mnemonicParsing="false" onAction="#deleteUser" prefHeight="25.0" prefWidth="185.0" style="-fx-background-color: lime;" text="Delete" textFill="WHITE" />
+            <Button fx:id="AddBtn" layoutX="477.0" layoutY="624.0" mnemonicParsing="false" onAction="#addUser" prefHeight="25.0" prefWidth="185.0" style="-fx-background-color: #33ffec;" text="Add" textFill="WHITE" />
+            <Button fx:id="UpdateBtn" layoutX="162.0" layoutY="624.0" mnemonicParsing="false" onAction="#updateTable" prefHeight="25.0" prefWidth="185.0" style="-fx-background-color: #ff33c7;" text="Update" textFill="WHITE" />
+         </children>
+      </Pane>
+   </children>
+</AnchorPane>

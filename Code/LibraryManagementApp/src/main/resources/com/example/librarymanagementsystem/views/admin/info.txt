@@ -1,0 +1,1 @@
+this folder for all views the admin has access to
