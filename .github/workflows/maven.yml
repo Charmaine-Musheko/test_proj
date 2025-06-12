@@ -1,44 +1,59 @@
-name: Java CI with Maven and LMS Testing
+name: Java CI with Maven and TestRigor
 
 on:
   push:
     branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
 
 jobs:
-  build-and-test:
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [ubuntu-latest, windows-latest]
+  build:
+    runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v4
-      - name: Set up JDK 17
-        uses: actions/setup-java@v4
-        with:
-          java-version: '17'
-          distribution: 'temurin'
-          cache: maven
-      - name: Cache Maven dependencies
-        uses: actions/cache@v3
-        with:
-          path: ~/.m2/repository
-          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
-          restore-keys: ${{ runner.os }}-maven-
-      - name: Build with Maven
-        run: mvn -B package --file pom.xml
-      - name: Set up MySQL
+      - name: Trigger TestRigor Tests
         run: |
-          sudo systemctl start mysql
-          mysql -e "CREATE DATABASE IF NOT EXISTS lms;"
-          mysql -u root lms < seed.sql
-      - name: Build and start JavaFX application
-        run: mvn package && java -jar target/librarymanagementsystem-1.0-SNAPSHOT.jar &
-      - name: Run Tests
-        run: mvn test
-      - name: Upload test results
-        uses: actions/upload-artifact@v3
-        with:
-          name: test-results
-          path: target/surefire-reports/
+          curl -X POST \
+            -H 'Content-type: application/json' \
+            -H 'auth-token: ee87baf9-a11b-43a5-8269-e117e5080d01' \
+            --data '{"forceCancelPreviousTesting":true,"storedValues":{"storedValueName1":"Value"}}' \
+            https://api.testrigor.com/api/v1/apps/ma2sa5KtrWidgroow/retest
+
+      - name: Poll TestRigor Status
+        run: |
+          sleep 10
+          while true; do
+            echo " "
+            echo "==================================="
+            echo " Checking TestRigor run status"
+            echo "==================================="
+            response=$(curl -i -s -X GET 'https://api.testrigor.com/api/v1/apps/ma2sa5KtrWidgroow/status' \
+              -H 'auth-token: ee87baf9-a11b-43a5-8269-e117e5080d01' \
+              -H 'Accept: application/json')
+            code=$(echo "$response" | grep HTTP | awk '{print $2}')
+            body=$(echo "$response" | sed -n '/{/,/}/p')
+            echo "Status code: $code"
+            echo "Response: $body"
+            case $code in
+              4*|5*)
+                echo "❌ Error calling API"
+                exit 1
+                ;;
+              200)
+                echo "✅ Test finished successfully"
+                exit 0
+                ;;
+              227|228)
+                echo "⏳ Test is still running..."
+                ;;
+              230)
+                echo "❌ Test finished but failed"
+                exit 1
+                ;;
+              *)
+                echo "❓ Unknown status"
+                exit 1
+                ;;
+            esac
+            sleep 10
+          done
+
+  
