@@ -67,7 +67,7 @@ public class LoginController {
     }
 
     public void goToSignUp(ActionEvent event) {
-        sceneController.switchTo(event, "register.fxml");
+        sceneController.switchTo(event, "registration.fxml");
     }
 }
 

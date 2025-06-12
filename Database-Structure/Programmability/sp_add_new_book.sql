@@ -1,82 +1,86 @@
-
 USE lms;
 DROP PROCEDURE IF EXISTS add_new_book;
-CREATE PROCEDURE `add_new_book` (
-    `@title` varchar(255),
-    `@year_published` year,
-    `@edition` int,
-    `@author` varchar(150),
-    `@publisher` varchar(100),
-    `@type` varchar(100),
-    `@genre` varchar(50),
-    out message text
+
+DELIMITER //
+
+CREATE PROCEDURE add_new_book(
+    IN p_title VARCHAR(255),
+    IN p_year_published YEAR,
+    IN p_edition INT,
+    IN p_author VARCHAR(150),
+    IN p_publisher VARCHAR(100),
+    IN p_type VARCHAR(100),
+    IN p_genre VARCHAR(50),
+    OUT message TEXT
 )
 BEGIN
-    declare existing_author_id int;
-    declare existing_genre_id int;
-    declare existing_publisher_id int;
-    declare existing_book_type_id int;
-    declare book_id varchar(20) ;
+    DECLARE existing_author_id INT;
+    DECLARE existing_genre_id INT;
+    DECLARE existing_publisher_id INT;
+    DECLARE existing_book_type_id INT;
+    DECLARE book_id VARCHAR(20);
 
-    SET @@SESSION.max_sp_recursion_depth=10;
+    -- Get or create author
+    SELECT author_id INTO existing_author_id
+    FROM author
+    WHERE author_name = p_author
+    LIMIT 1;
 
-    if exists(select author_id from lms.author where author_name like `@author`)
-    then
--- if the author exists store its id in the variable existing_author_id
-        select author_id into existing_author_id  from lms.author where author_name like `@author`;
+    IF existing_author_id IS NULL THEN
+        INSERT INTO author(author_name) VALUES (p_author);
+        SET existing_author_id = LAST_INSERT_ID();
+    END IF;
 
-        set book_id = CONCAT('BID', LEFT(RAND()*1000000000+9999999999, 7) , UPPER(left(`@author`, 3)));
-        -- If the created ID exists make a new one
-        -- while (exists(select COUNT(isbn) from book WHERE isbn = book_id)) DO
-        --     begin
-        --         set book_id = CONCAT('BID', LEFT(RAND()*1000000000+9999999999, 7) , UPPER(left(`@author`, 3)));
-        --     end;
-        -- end while;
+    -- Get or create genre
+    SELECT genre_id INTO existing_genre_id
+    FROM genre
+    WHERE genre_name = p_genre
+    LIMIT 1;
 
-        if exists(select genre_id from lms.genre where genre_name like `@genre`)
-        then
-            -- if the genre exists store its id in the variable existing_genre_id
-            select genre_id into existing_genre_id from lms.genre where genre_name like `@genre`;
+    IF existing_genre_id IS NULL THEN
+        INSERT INTO genre(genre_name) VALUES (p_genre);
+        SET existing_genre_id = LAST_INSERT_ID();
+    END IF;
 
-            if exists(select publisher_id from publisher where publisher_name like `@publisher`)
-                then
-                    select publisher_id into existing_publisher_id from publisher where publisher_name like `@publisher`;
+    -- Get or create publisher
+    SELECT publisher_id INTO existing_publisher_id
+    FROM publisher
+    WHERE publisher_name = p_publisher
+    LIMIT 1;
 
-                    if exists(select type_id from book_type where type_name like `@type`)
-                        then
-                        select type_id into existing_book_type_id from book_type where type_name like `@type`;
+    IF existing_publisher_id IS NULL THEN
+        INSERT INTO publisher(publisher_name) VALUES (p_publisher);
+        SET existing_publisher_id = LAST_INSERT_ID();
+    END IF;
 
-                        INSERT INTO `lms`.`book`(`isbn`, `book_status`, `publisher_id`, `type_id`, `book_title`, `edition`, `year_published`)
-                        VALUES(book_id,
-                               1,
-                               existing_publisher_id,
-                               existing_book_type_id,
-                               `@title`,
-                               `@edition`,
-                               `@year_published`);
-                        INSERT INTO `lms`.`book_genre` (`genre_id`, `isbn`)
-                        VALUES (existing_genre_id, book_id);
-                        INSERT INTO `lms`.`book_author`(author_id, isbn)
-                        VALUES (existing_author_id, book_id);
-                    else
-                        insert into book_type(type_name) values (`@type`);
-                        call add_new_book(`@title`, `@year_published`, `@edition`, `@author`, `@publisher`, `@type`, `@genre`);
-                    end if;
-            else
-                insert into publisher(publisher_name) values (`@publisher`);
-                call add_new_book(`@title`, `@year_published`, `@edition`, `@author`, `@publisher`, `@type`, `@genre`);
-            end if;
-        else
---  Otherwise create a new Genre and call the method again
-            insert into `lms`.`genre`(genre_name)
-            values (`@genre`);
-            call add_new_book(`@title`, `@year_published`, `@edition`, `@author`, `@publisher`, `@type`, `@genre`);
-        end if;
-    else
-        --            Otherwise create a new Author and call the method again
-        insert into `lms`.`author`(author_name) values (`@author`);
-        call add_new_book(`@title`, `@year_published`, `@edition`, `@author`, `@publisher`, `@type`, `@genre`);
-    end if;
+    -- Get or create book type
+    SELECT type_id INTO existing_book_type_id
+    FROM book_type
+    WHERE type_name = p_type
+    LIMIT 1;
+
+    IF existing_book_type_id IS NULL THEN
+        INSERT INTO book_type(type_name) VALUES (p_type);
+        SET existing_book_type_id = LAST_INSERT_ID();
+    END IF;
+
+    -- Generate book_id
+    SET book_id = CONCAT('BID', FLOOR(RAND() * 1000000), UPPER(LEFT(p_author, 3)));
+
+    -- Insert book
+    INSERT INTO book(isbn, book_status, publisher_id, type_id, book_title, edition, year_published)
+    VALUES(book_id, 1, existing_publisher_id, existing_book_type_id, p_title, p_edition, p_year_published);
+
+    -- Insert book-genre relationship
+    INSERT INTO book_genre(genre_id, isbn)
+    VALUES (existing_genre_id, book_id);
+
+    -- Insert book-author relationship
+    INSERT INTO book_author(author_id, isbn)
+    VALUES (existing_author_id, book_id);
+
+    SET message = CONCAT('Book added with ID: ', book_id);
 END;
+//
 
-
+DELIMITER ;

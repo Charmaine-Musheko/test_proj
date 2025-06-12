@@ -13,20 +13,27 @@ import java.util.Objects;
 
 public class SceneController {
 
-    public void switchTo(ActionEvent event, String page)  {
-        try {
-            URL url = getClass().getResource("views/"+ page);
-            Parent root = FXMLLoader.load(url);
-            Scene scene = new Scene(root);
+   public void switchTo(ActionEvent event, String page)  {
+    try {
+        URL url = getClass().getResource("/com/example/librarymanagementsystem/views/" + page);
+        System.out.println("Loading FXML from: " + url);  // helpful for debugging
 
-            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            stage.setScene(scene);
-            stage.show();
-        } catch (Exception e){
-            e.printStackTrace();
-            System.out.println(e.getMessage());
+        if (url == null) {
+            throw new RuntimeException("FXML file not found: " + page);
         }
+
+        Parent root = FXMLLoader.load(url);
+        Scene scene = new Scene(root);
+
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        stage.setScene(scene);
+        stage.show();
+    } catch (Exception e){
+        e.printStackTrace();
+        System.out.println("Error while switching scene: " + e.getMessage());
     }
+}
+
 
     public void changePane(ActionEvent event, String page, AnchorPane panel){
         try {
